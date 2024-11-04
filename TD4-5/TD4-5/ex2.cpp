@@ -1,17 +1,16 @@
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <set>
+#include <algorithm>
+#include <vector>
 #include "ex2.hpp"
 
-using namespace std;
 
 Fraction::Fraction(const Fraction& fraction) {
 	this->num_ = fraction.num_;
 	this->den_ = fraction.den_;
 }
 
-Fraction::Fraction(const int& num = 0, const int& den = 1) {
+Fraction::Fraction(const int& num, const int& den) {
 	this->num_ = num;
 	this->den_ = den;
 }
@@ -37,6 +36,11 @@ int Fraction::get_den() const {
 	return this->den_;
 }
 
+ostream& operator<<(ostream& os, const Fraction& f) {
+	os << f.get_num() << "/" << f.get_den() << " ";
+	return os;
+}
+
 int main() {
 
 	ifstream file("../../../../TD4-5/fractionTextFile.txt"); // Opens the file
@@ -45,19 +49,55 @@ int main() {
 		return EXIT_FAILURE;
 	}
 	
+	vector<Fraction> tab;
 	Fraction frac(1, 1);
-	auto& tab = new Fraction;
 	char c;
-	string line;
-	getline(file, line);
+	int mult = 1, tempNum = 0, tempDen = 0;
+	bool isNum = true;
 
-	while (c != NULL) {
+	while (file.get(c)) { // As long as c != NULL 
 
-
+		if (c >= '0' && c <= '9') {
+			if (isNum) {
+				tempNum += static_cast<int>((c - 48) * mult); // Converts char into int with the right value thanks to -48
+			}
+			else {
+				tempDen += static_cast<int>((c - 48) * mult); // Converts char into int with the right value thanks to -48
+			}
+			mult *= 10;
+		}
+		else if (c == '/') {
+			mult = 1;
+			!isNum;
+			tempNum = 0;
+			tempDen = 0;
+		}
+		else if (c == ',') {
+			mult = 1;
+			!isNum;
+			tempNum = 0;
+			tempDen = 0;
+			frac.set_num(tempNum);
+			frac.set_den(tempDen);
+			tab.push_back(frac);
+		}
+		else {
+			cout << "Error : the syntax used in the text file is not respected\n";
+			return EXIT_FAILURE;
+		}
 
 	}
-	
 
+	// find a way to sort the vector and print it
+	sort(tab.begin(), tab.end());
+	auto iter = tab.begin();
+	while (iter != tab.end()) {
+		cout << *iter;
+		++iter;
+		
+	}
+	// Fuck this exercise it's pissing me off
+	
 	file.close();
 	return EXIT_SUCCESS;
 

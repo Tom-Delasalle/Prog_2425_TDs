@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <set>
+using namespace std;
 
 class Fraction
 {
@@ -15,4 +16,6 @@ public:
     void set_den(const int& den);
     int get_num() const;
     int get_den() const;
+
+    friend ostream& operator<<(ostream& os, const Fraction& f);
 };
